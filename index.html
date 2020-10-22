@@ -30,11 +30,11 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off" action="https://echo.htmlacademy.ru/courses">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
-              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" required>
+              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" required tabindex="1">
               <label for="upload-file" class="img-upload__label  img-upload__control">Загрузить</label>
             </fieldset>
 
@@ -155,14 +155,6 @@
           <!-- Комментарии к изображению -->
           <div class="social__comment-count">5 из <span class="comments-count">125</span> комментариев</div>
           <ul class="social__comments">
-            <li class="social__comment">
-              <img class="social__picture" src="img/avatar-4.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-              <p class="social__text">Мега фото! Просто обалдеть. Как вам так удалось?</p>
-            </li>
-            <li class="social__comment">
-              <img class="social__picture" src="img/avatar-3.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-               <p class="social__text">Да это фоташоп!!!!!!!!</p>
-            </li>
           </ul>
 
           <!-- Кнопка для загрузки новой порции комментариев -->
@@ -171,7 +163,7 @@
           <!-- Форма для отправки комментария -->
           <div class="social__footer">
             <img class="social__picture" src="img/avatar-6.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-            <input type="text" class="social__footer-text" placeholder="Ваш комментарий...">
+            <input type="text" class="social__footer-text" placeholder="Ваш комментарий..." maxlength="140">
             <button type="button" class="social__footer-btn" name="button">Отправить</button>
           </div>
         </div>
@@ -199,7 +191,7 @@
 
   <!-- Шаблон изображения случайного пользователя -->
   <template id="picture">
-    <a href="#" class="picture">
+    <a href="#" class="picture" data-id="" tabindex="1">
       <img class="picture__img" src="" width="182" height="182" alt="Случайная фотография">
       <p class="picture__info">
         <span class="picture__comments"></span>
@@ -232,6 +224,17 @@
   <template id="messages">
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
+
+  <!-- Комментарий к изоражению на полный экран -->
+  <template id="social__comment">
+    <li class="social__comment">
+      <img class="social__picture" src="" alt="" width="35" height="35">
+      <p class="social__text"></p>
+    </li>
+  </template>
+
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/bigpicture.js"></script>
 
 </body>
 </html>

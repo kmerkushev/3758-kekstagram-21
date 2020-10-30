@@ -1,41 +1,18 @@
 "use strict";
 
 (() => {
+  let bigPicture = document.querySelector(`.big-picture`);
+  let bigPicturePreview = document.querySelector(`.big-picture__preview`);
+  let isBigPicturePreviewClicked = false;
+  let overlay = document.querySelector(`.big-picture.overlay`);
+
+  let commentCount = document.querySelector(`.social__comment-count`);
+  let commentsLoader = document.querySelector(`.comments-loader`);
+  let closeBigPictureBtn = document.querySelector(`#picture-cancel`);
+  let newCommentInput = document.querySelector(`.social__footer-text`);
+  let newCommentInputIsFocused = false;
+
   let picturesContainer = document.querySelector(`.pictures`);
-
-  let getCoords = (elem) => {
-    let box = elem.getBoundingClientRect();
-    return {
-      x: box.left + pageXOffset,
-      center: box.left + pageXOffset + box.width / 2
-    };
-  };
-
-  effectLevelPin.addEventListener(`mouseup`, () => {
-    getEffectLevel();
-  });
-
-  let getEffectLevel = () => {
-    let levelPx = Math.round(getCoords(effectLevelPin).center - getCoords(effectLevelLine).x);
-    let effectLineWidth = parseInt(getComputedStyle(effectLevelLine).width, 10);
-    let levelPerCent = Math.round(levelPx / effectLineWidth * 100);
-    return levelPerCent;
-  };
-
-  let setEffectLevel = (level) => {
-    moveLevelPin(level);
-    effectLevelInput.value = level;
-  };
-
-  let moveLevelPin = (level) => {
-    effectLevelPin.style.left = level + `%`;
-    effectLevelDepth.style.width = level + `%`;
-  };
-
-  effectsList.addEventListener(`change`, () => {
-    setEffectLevel(EFFECT_LEVEL_DEFAULT);
-  });
-
 
   let renderComment = (arrayOfComments) => {
     let commentsContainer = document.querySelector(`.social__comments`);
@@ -66,6 +43,20 @@
     }
   };
 
+  let onBigPicturePreviewClick = () => {
+    isBigPicturePreviewClicked = true;
+  };
+
+  let onOverlayClick = (evt) => {
+    bigPicturePreview.addEventListener(`click`, onBigPicturePreviewClick);
+
+    if (!isBigPicturePreviewClicked) {
+      closeBigPicture();
+    } else {
+      isBigPicturePreviewClicked = false;
+    };
+  };
+
   let openBigPicture = () => {
     bigPicture.classList.remove('hidden');
     commentCount.classList.add(`hidden`);
@@ -80,6 +71,7 @@
     });
 
     document.addEventListener(`keydown`, onBigPictureEscPress);
+    overlay.addEventListener(`click`, onOverlayClick);
 
     closeBigPictureBtn.addEventListener(`click`, () => {
       closeBigPicture();
@@ -91,6 +83,8 @@
     commentCount.classList.remove(`hidden`);
     commentsLoader.classList.remove(`hidden`);
     document.removeEventListener(`keydown`, onBigPictureEscPress);
+    overlay.removeEventListener(`click`, onOverlayClick);
+    isBigPicturePreviewClicked = false;
   };
 
   let clickHandler = (evt) => {
@@ -105,7 +99,7 @@
       return;
     };
     openBigPicture();
-    renderPostBigPicture(posts[postId]);
+    renderPostBigPicture(window.posts[postId]);
   };
 
   picturesContainer.addEventListener(`click`, (evt) => {

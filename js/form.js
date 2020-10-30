@@ -7,40 +7,6 @@
     }
   };
 
-  let getCoords = (elem) => {
-    let box = elem.getBoundingClientRect();
-    return {
-      x: box.left + pageXOffset,
-      center: box.left + pageXOffset + box.width / 2
-    };
-  };
-
-  effectLevelPin.addEventListener(`mouseup`, () => {
-    getEffectLevel();
-  });
-
-  let getEffectLevel = () => {
-    let levelPx = Math.round(getCoords(effectLevelPin).center - getCoords(effectLevelLine).x);
-    let effectLineWidth = parseInt(getComputedStyle(effectLevelLine).width, 10);
-    let levelPerCent = Math.round(levelPx / effectLineWidth * 100);
-    return levelPerCent;
-  };
-
-  let setEffectLevel = (level) => {
-    moveLevelPin(level);
-    effectLevelInput.value = level;
-  };
-
-  let moveLevelPin = (level) => {
-    effectLevelPin.style.left = level + `%`;
-    effectLevelDepth.style.width = level + `%`;
-  };
-
-  effectsList.addEventListener(`change`, () => {
-    setEffectLevel(EFFECT_LEVEL_DEFAULT);
-  });
-
-
   let hashtagInputHandler = () => {
     let value = hashtagInput.value.toLowerCase();
     let valueSplitted = value.split(` `);
@@ -68,7 +34,6 @@
       hashtagInput.reportValidity();
     }
   };
-
 
   let hasSameHashtags = (arrayOfHashTags) => {
     let has = false;

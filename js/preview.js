@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 (() => {
   let bigPicture = document.querySelector(`.big-picture`);

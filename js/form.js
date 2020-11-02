@@ -6,10 +6,15 @@
   const MAX_HASHTAG_COUNT = 5;
 
   let effectsList = document.querySelector(`.effects__list`);
+  let effectLevel = document.querySelector(`.effect-level`);
   let effectLevelInput = document.querySelector(`.effect-level__value`);
+  let effectLevelPin = document.querySelector(`.effect-level__pin`);
   let effectLevelDepth = document.querySelector(`.effect-level__depth`);
   let effectLevelLine = document.querySelector(`.effect-level__line`);
-  let effectLevelPin = document.querySelector(`.effect-level__pin`);
+  let picture = document.querySelector(`.img-upload__preview`);
+  let currentFilter = `effect-none`;
+
+  effectLevel.classList.add(`visually-hidden`);
 
   let getCoords = (elem) => {
     let box = elem.getBoundingClientRect();
@@ -19,15 +24,52 @@
     };
   };
 
-  let getEffectLevel = () => {
-    let levelPx = Math.round(getCoords(effectLevelPin).center - getCoords(effectLevelLine).x);
+  let getCursorX = (evt) => {
+    return evt.clientX;
+  };
+
+  let getEffectLevel = (evt) => {
+    let levelPx = Math.round(evt.clientX - getCoords(effectLevelLine).x);
     let effectLineWidth = parseInt(getComputedStyle(effectLevelLine).width, 10);
     let levelPerCent = Math.round(levelPx / effectLineWidth * 100);
+    if (levelPerCent <= 0) {
+      levelPerCent = 0;
+    } else if (levelPerCent >= 100) {
+      levelPerCent = 100;
+    }
     return levelPerCent;
   };
 
-  let setEffectLevel = (level) => {
+  let setEffectLevel = (level, effectName) => {
+    let levelComputed = level / 100;;
+    if (effectName === `effect-none`) {
+      picture.style = ``;
+      effectLevel.classList.add(`visually-hidden`);
+    } else {
+      switch (effectName) {
+        case `effect-chrome`:
+          picture.style = `filter:grayscale(` + levelComputed + `); `;
+          break;
+        case `effect-sepia`:
+          picture.style = `filter:sepia(` + levelComputed + `); `;
+          break;
+        case `effect-marvin`:
+          levelComputed = level;
+          picture.style = `filter:invert(` + levelComputed + `%); `;
+          break;
+        case `effect-phobos`:
+          levelComputed = Math.round(level / 100 * 3);
+          picture.style = `filter:blur(` + levelComputed + `px); `;
+          break;
+        case `effect-heat`:
+          levelComputed = Math.round(level / 100 * 2 + 1);
+          picture.style = `filter:brightness(` + levelComputed + `); `;
+          break;
+      };
+      effectLevel.classList.remove(`visually-hidden`);
+    }
     moveLevelPin(level);
+    console.log(effectLevelInput.value);
     effectLevelInput.value = level;
   };
 
@@ -36,21 +78,29 @@
     effectLevelDepth.style.width = level + `%`;
   };
 
-  effectsList.addEventListener(`change`, () => {
-    setEffectLevel(EFFECT_LEVEL_DEFAULT);
+
+  let onEffectLevelPinMove = (evt) => {
+    let currentLevel = getEffectLevel(evt);
+    setEffectLevel(currentLevel, currentFilter);
+  };
+
+
+  effectsList.addEventListener(`change`, (evt) => {
+    currentFilter = evt.target.id;
+    setEffectLevel(EFFECT_LEVEL_DEFAULT, evt.target.id);
   });
 
   effectLevelPin.addEventListener(`mousedown`, () => {
-    effectLevelPin.addEventListener(`mousemove`, () => {
+    document.addEventListener(`mousemove`, onEffectLevelPinMove);
 
-    });
-
-    effectLevelPin.addEventListener(`mouseup`, () => {
-      let level = getEffectLevel();
-      setEffectLevel(level);
+    document.addEventListener(`mouseup`, () => {
+      document.removeEventListener(`mousemove`, onEffectLevelPinMove);
     });
 
   });
+
+
+
 
   let hashtagInput = document.querySelector(`.text__hashtags`);
   let hashtagInputIsFocused = false;

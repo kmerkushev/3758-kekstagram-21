@@ -1,7 +1,6 @@
 "use strict";
 
 let uploadCancelBtn = document.querySelector(`#upload-cancel`);
-
 let uploadFileInput = document.querySelector(`#upload-file`);
 let imageUploadOverlay = document.querySelector(`.img-upload__overlay`);
 

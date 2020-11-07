@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 (() => {
   let bigPicture = document.querySelector(`.big-picture`);
@@ -16,6 +16,8 @@
 
   let renderComment = (arrayOfComments) => {
     let commentsContainer = document.querySelector(`.social__comments`);
+    commentsContainer.innerHTML = ``;
+
     let template = document.querySelector(`#social__comment`).content.querySelector(`li`);
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < arrayOfComments.length; i++) {
@@ -31,6 +33,7 @@
   let renderPostBigPicture = (post) => {
     bigPicture.querySelector(`.big-picture__img`).querySelector(`img`).src = post.url;
     bigPicture.querySelector(`.big-picture__img`).querySelector(`img`).alt = post.description;
+    bigPicture.querySelector(`.social__caption`).textContent = post.description;
     bigPicture.querySelector(`.likes-count`).textContent = post.likes;
     bigPicture.querySelector(`.comments-count`).textContent = post.comments.length;
     renderComment(post.comments);
@@ -99,7 +102,7 @@
       return;
     };
     openBigPicture();
-    renderPostBigPicture(window.posts[postId]);
+    renderPostBigPicture(window.data[postId]);
   };
 
   picturesContainer.addEventListener(`click`, (evt) => {

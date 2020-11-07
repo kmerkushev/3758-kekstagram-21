@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 (() => {
   const EFFECT_LEVEL_DEFAULT = 20;

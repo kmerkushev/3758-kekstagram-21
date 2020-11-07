@@ -16,7 +16,7 @@
     pictures.appendChild(fragment);
   };
 
-  window.renderPictures = (posts) => {
-    renderPictures(posts);
+  window.renderPictures = (arrayOfPosts) => {
+    renderPictures(arrayOfPosts);
   };
 }) ();

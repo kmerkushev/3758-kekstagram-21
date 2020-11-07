@@ -1,4 +1,18 @@
-"use strict";
+`use strict`;
 
-posts = window.posts();
-window.renderPictures(posts);
+(() => {
+  window.data;
+
+  let onLoad = (request) => {
+    console.log(request);
+    window.renderPictures(request);
+    window.data = request;
+  };
+
+  let onError = (error) => {
+    console.log(error);
+  };
+
+  window.getData(onLoad, onError);
+
+})();

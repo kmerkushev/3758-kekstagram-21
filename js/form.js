@@ -5,7 +5,12 @@
   const MAX_HASHTAG_LENGTH = 20;
   const MAX_HASHTAG_COUNT = 5;
 
+  let isSuccessMessageCreated = false;
+  let isErrorMessageCreated = false;
+  let isMessageShown = false;
+
   let effectsList = document.querySelector(`.effects__list`);
+  let effectNone = effectsList.querySelector(`#effect-none`);
   let effectLevel = document.querySelector(`.effect-level`);
   let effectLevelInput = document.querySelector(`.effect-level__value`);
   let effectLevelPin = document.querySelector(`.effect-level__pin`);
@@ -13,6 +18,8 @@
   let effectLevelLine = document.querySelector(`.effect-level__line`);
   let picture = document.querySelector(`.img-upload__preview`);
   let currentFilter = `effect-none`;
+  let form = document.querySelector(`#upload-select-image`);
+  let sendBtn = document.querySelector(`#upload-submit`);
 
   effectLevel.classList.add(`visually-hidden`);
 
@@ -69,7 +76,6 @@
       effectLevel.classList.remove(`visually-hidden`);
     }
     moveLevelPin(level);
-    console.log(effectLevelInput.value);
     effectLevelInput.value = level;
   };
 
@@ -101,7 +107,7 @@
 
 
 
-
+  let commentField = document.querySelector(`.text__description`);
   let hashtagInput = document.querySelector(`.text__hashtags`);
   let hashtagInputIsFocused = false;
 
@@ -159,4 +165,89 @@
   });
 
   window.hashtagInputIsFocused = hashtagInputIsFocused;
+
+  let createMessage = (type) => {
+    let main = document.querySelector(`main`);
+    let template = document.querySelector(`#${type}`).content.querySelector(`section`);
+    let fragment = document.createDocumentFragment();
+    let message = template.cloneNode(true);
+    message.classList.add(`visually-hidden`);
+    fragment.appendChild(message);
+    main.appendChild(message);
+
+    if (type === `success`) {
+      isSuccessMessageCreated = true;
+    } else if (type === `error`) {
+      isErrorMessageCreated = true;
+    }
+
+    let btn = main.querySelector(`.${type}__button`);
+    btn.addEventListener(`click`, () => {
+      hideMessage(`${type}`);
+    });
+  };
+
+  let showMessage = (type) => {
+    let message = document.querySelector(`.${type}`);
+    message.classList.remove(`visually-hidden`);
+
+    isMessageShown = true;
+
+    let onMessageEscPress = (evt) => {
+      if ((evt.key === `Escape`) && isMessageShown) {
+        hideMessage();
+      }
+    };
+
+    document.addEventListener(`keydown`, onMessageEscPress);
+
+    let onOverlayClick = (evt) => {
+      if ((isMessageShown) && (evt.target != document.querySelector(`.${type}__inner`)) && (evt.target != document.querySelector(`.${type}__title`)) && (evt.target != document.querySelector(`.${type}__button`)) && (evt.target != document.querySelector(`.${type}__inner`))) {
+        hideMessage(`${type}`);
+      }
+    };
+    message.addEventListener(`click`, onOverlayClick);
+  }
+
+	let hideMessage = (type) => {
+		let message = document.querySelector(`.${type}`);
+		message.classList.add(`visually-hidden`);
+		isMessageShown = false;
+	};
+
+  let onLoad = () => {
+    window.closePopup();
+    if (!isSuccessMessageCreated) {
+      createMessage(`success`);
+    }
+    showMessage(`success`);
+  };
+
+  let onError = (error) => {
+    window.closePopup();
+    if (!isErrorMessageCreated) {
+      createMessage(`error`);
+    }
+    showMessage(`error`);
+  }
+
+  let clearForm = () => {
+    effectNone.checked = true;
+    picture.style = ``;
+    moveLevelPin(EFFECT_LEVEL_DEFAULT);
+    effectLevel.classList.add(`visually-hidden`);
+    effectLevelInput.value = EFFECT_LEVEL_DEFAULT;
+    hashtagInput.value = ``;
+    commentField.value = ``;
+  };
+
+  form.addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    window.sendData(new FormData(form), onLoad, onError);
+    clearForm();
+  });
+
+  window.clearForm = () => {
+    clearForm();
+  };
 })();

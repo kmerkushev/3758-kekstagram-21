@@ -29,4 +29,12 @@ let closePopup = () => {
   imageUploadOverlay.classList.add(`hidden`);
   document.body.classList.remove(`modal-open`);
   document.removeEventListener(`keydown`, onPopupEscPress);
+  window.clearForm();
+};
+
+window.openPopup = () => {
+  openPopup();
+};
+window.closePopup = () => {
+  closePopup();
 };

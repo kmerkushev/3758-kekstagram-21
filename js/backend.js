@@ -2,7 +2,10 @@
 
 (() => {
   const URL_GET = `https://21.javascript.pages.academy/kekstagram/data`;
+  const URL_POST = `https://21.javascript.pages.academy/kekstagram`;
   const TIMEOUT_IN_MS = 2000;
+
+  let form = document.querySelector(`#upload-select-image`);
 
   window.getData = (onLoad, onError) => {
     let xhr = new XMLHttpRequest();
@@ -26,7 +29,15 @@
     xhr.send();
   }
 
-  window.post = () => {
+  window.sendData = (data, onLoad, onError) => {
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = `json`;
 
+    xhr.addEventListener(`load`, function() {
+      onLoad();
+    });
+
+    xhr.open(`POST`, URL_POST);
+    xhr.send(data);
   }
 })();
